@@ -9,6 +9,9 @@
 #define PIN_BUTTON_BLACK  10
 #define PIN_BUTTON_BLUE  11
 
+#define PIN_ENGINE_LEFT  4
+#define PIN_ENGINE_RIGHT  5
+
 bool pictureInvalid = true;
 int delayCounter = 0;
 bool timerStatus = false;
@@ -18,6 +21,8 @@ bool blackStatus = false;
 bool blueStatus = false;
 bool lastBlackStatus = false;
 bool lastBlueStatus = false;
+
+int engineCounter = 0;
 
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
@@ -29,6 +34,9 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
    pinMode(PIN_LED_RED, OUTPUT);
    pinMode(PIN_LED_GREEN, OUTPUT);
+  pinMode(PIN_ENGINE_LEFT, OUTPUT);
+   pinMode(PIN_ENGINE_RIGHT, OUTPUT);
+   
    pinMode(PIN_BUTTON_BLACK, INPUT);
    pinMode(PIN_BUTTON_BLUE, INPUT);
 }
@@ -42,6 +50,7 @@ void loop() {
   delayCounter++;
   if (delayCounter >= 100)
   {
+    engineCounter = (engineCounter+1) % 16;
     delayCounter = 0;
     timerStatus = !timerStatus;
   }
@@ -116,4 +125,22 @@ void pressBlueButton() {
 
 void calcLogic() {
  digitalWrite(PIN_LED_RED, timerStatus? HIGH : LOW);   
+// digitalWrite(PIN_ENGINE_LEFT, timerStatus? HIGH : LOW);   
+
+//return;
+
+if (engineCounter < 4) {
+digitalWrite(PIN_ENGINE_LEFT ,  LOW);   
+digitalWrite(PIN_ENGINE_RIGHT ,  LOW);   
+} else if (engineCounter < 8) {
+digitalWrite(PIN_ENGINE_LEFT ,  HIGH);  
+digitalWrite(PIN_ENGINE_RIGHT ,  LOW); 
+}  else if (engineCounter < 12) {
+digitalWrite(PIN_ENGINE_LEFT ,  LOW);   
+digitalWrite(PIN_ENGINE_RIGHT ,  LOW);   
+} else  {
+  digitalWrite(PIN_ENGINE_LEFT ,  LOW); 
+digitalWrite(PIN_ENGINE_RIGHT ,  HIGH);   
+} 
+ 
 }
